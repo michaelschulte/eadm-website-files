@@ -5,8 +5,8 @@ The folder path is the web address: `2026/11/report.pdf` is published at
 `/files/2026/11/report.pdf`. Everything below is done in the browser on
 github.com; you do not need to install anything.
 
-The website checks this repository every hour and publishes new files
-automatically, so an upload is live within about an hour.
+Every push to this repository rebuilds the website, so an upload is
+live a few minutes later.
 
 ## Adding a newsletter
 

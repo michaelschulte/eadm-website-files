@@ -1,0 +1,20 @@
+name: Deploy the EADM website
+
+# Starts eadm-website's publish workflow, which builds with this repo's
+# latest main, so an upload goes live a few minutes after it is pushed.
+# SITE_DEPLOY_TOKEN is a fine-grained token limited to
+# michaelschulte/eadm-website with "Actions: read and write" only: it can
+# start workflow runs there but cannot change the site's code.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh workflow run publish.yml --repo michaelschulte/eadm-website --ref main
+        env:
+          GH_TOKEN: ${{ secrets.SITE_DEPLOY_TOKEN }}
