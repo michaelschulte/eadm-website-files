@@ -5,6 +5,10 @@ name: Deploy the EADM website
 # SITE_DEPLOY_TOKEN is a fine-grained token limited to
 # michaelschulte/eadm-website with "Actions: read and write" only: it can
 # start workflow runs there but cannot change the site's code.
+#
+# If the secret is missing, the run ends with a warning instead of failing,
+# so uploaders don't see a red cross for something only the site owner can
+# fix. The upload then goes live with eadm-website's scheduled run.
 
 on:
   push:
@@ -15,6 +19,12 @@ jobs:
   trigger:
     runs-on: ubuntu-latest
     steps:
-      - run: gh workflow run publish.yml --repo michaelschulte/eadm-website --ref main
+      - name: Start the site build
         env:
           GH_TOKEN: ${{ secrets.SITE_DEPLOY_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::warning::SITE_DEPLOY_TOKEN is not set, so the site build was not started. The upload goes live with eadm-website's next scheduled run."
+            exit 0
+          fi
+          gh workflow run publish.yml --repo michaelschulte/eadm-website --ref main
